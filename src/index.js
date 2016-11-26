@@ -5,15 +5,19 @@ export default class SmartInput extends Component {
   constructor() {
     super();
     this.state = {
-      message: 'valid'
+      message: 'valid',
+      expectations: new Set(),
+      inputValue: ''
     };
+    this.expectations = [1, 2, 3];
   }
-  componentDidMount() {
-    console.log(parser.parse('ID=1 AND NAME=\'Dmitry\''));
-  }
-
   onChange(event) {
+    if (!event) {
+      event = {target: {value:  this.state.inputValue}}
+    }
     var result = parser.parse(event.target.value);
+    var expectations = new Set(result.expected);
+    this.setState({expectations: expectations, inputValue: event.target.value});
     if (result.message && event.target.value.length > 0){
       this.setState({message: result.message});
       return;
@@ -21,14 +25,53 @@ export default class SmartInput extends Component {
     this.setState({message: 'valid'});
   }
 
+  expectationClick(text) {
+    this.setState({inputValue: this.state.inputValue + text});
+    setTimeout(() => {this.onChange()}, 1);
+  }
+
   render() {
     return (
-      <div>
-        <input type="text" onChange={this.onChange.bind(this)}/>
-        <div>
-          <code>{this.state.message}</code>
+      <div style={styles.smartInput}>
+        <div style={styles.message}>
+          {this.state.message}
         </div>
+        <input style={styles.input} type="text" onChange={this.onChange.bind(this)} value={this.state.inputValue}/>
+        <div style={styles.expectations}>
+          {(()=>{
+            var container = [];
+            this.state.expectations.forEach((expectation, i) => {
+              if (expectation.text) {
+                container.push(<div style={styles.expectation} key={expectation.text} onClick={this.expectationClick.bind(this, expectation.text)}> {expectation.text} </div>)
+              }
+            })
+            return container;
+          })()}
+        </div>
+
       </div>
     );
   }
 }
+
+const styles = {
+  smartInput: {
+    position: 'relative'
+  },
+  input: {
+    width: '100%'
+  },
+  expectations: {
+    position: 'absolute',
+    top: '100%',
+    border: '1px solid #ccc',
+    borderTop: 'none'
+  },
+  expectation: {
+    padding: '5px 10px',
+    cursor: 'pointer'
+  },
+  message: {
+    fontSize: '0.9em'
+  }
+};
