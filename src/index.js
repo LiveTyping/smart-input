@@ -9,7 +9,6 @@ export default class SmartInput extends Component {
       expectations: new Set(),
       inputValue: ''
     };
-    this.expectations = [1, 2, 3];
   }
   onChange(event) {
     if (!event) {
@@ -25,10 +24,15 @@ export default class SmartInput extends Component {
     this.setState({message: 'valid'});
   }
 
-  expectationClick(text) {
+  expectationClick(text) { 
     this.setState({inputValue: this.state.inputValue + text});
-    setTimeout(() => {this.onChange()}, 1);
+    setTimeout(() => {
+      this.onChange(); 
+      this.refs.input.focus();}, 
+    0);
   }
+
+
 
   render() {
     return (
@@ -36,7 +40,7 @@ export default class SmartInput extends Component {
         <div style={styles.message}>
           {this.state.message}
         </div>
-        <input style={styles.input} type="text" onChange={this.onChange.bind(this)} value={this.state.inputValue}/>
+        <input style={styles.input} type="text" onChange={this.onChange.bind(this)} value={this.state.inputValue} ref="input" />
         <div style={styles.expectations}>
           {(()=>{
             var container = [];
