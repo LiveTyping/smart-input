@@ -1,1 +1,24 @@
-/* styles here */
+.smart-input {
+  position: relative;
+}
+.input {
+  width: 100%;
+}
+.expectations {
+  position: absolute;
+  top: 100%;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+.expectation {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.expectation:hover, .expectation.active {
+  background: #ccc;
+}
+
+.message {
+  font-size: 0.9em;
+}

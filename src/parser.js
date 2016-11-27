@@ -243,7 +243,7 @@ module.exports = /*
     function expected(description, location) {
       location = location !== void 0 ? location : peg$computeLocation(peg$savedPos, peg$currPos)
 
-      return peg$buildStructuredError(
+      throw peg$buildStructuredError(
         [peg$otherExpectation(description)],
         input.substring(peg$savedPos, peg$currPos),
         location
@@ -253,7 +253,7 @@ module.exports = /*
     function error(message, location) {
       location = location !== void 0 ? location : peg$computeLocation(peg$savedPos, peg$currPos)
 
-      return peg$buildSimpleError(message, location);
+      throw peg$buildSimpleError(message, location);
     }
 
     function peg$literalExpectation(text, ignoreCase) {
@@ -996,7 +996,7 @@ module.exports = /*
         peg$fail(peg$endExpectation());
       }
 
-      return peg$buildStructuredError(
+      throw peg$buildStructuredError(
         peg$maxFailExpected,
         peg$maxFailPos < input.length ? input.charAt(peg$maxFailPos) : null,
         peg$maxFailPos < input.length

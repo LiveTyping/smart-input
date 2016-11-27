@@ -7,14 +7,20 @@ export default class SmartInput extends Component {
     this.state = {
       message: 'valid',
       expectations: new Set(),
-      inputValue: ''
+      inputValue: '',
+      activeExpectation: 0
     };
   }
   onChange(event) {
     if (!event) {
       event = {target: {value:  this.state.inputValue}}
     }
-    var result = parser.parse(event.target.value);
+    var result = null;
+    try {
+       result = parser.parse(event.target.value);
+    } catch (err) {
+       result = err;
+    }
     var expectations = new Set(result.expected);
     this.setState({expectations: expectations, inputValue: event.target.value});
     if (result.message && event.target.value.length > 0){
@@ -24,29 +30,55 @@ export default class SmartInput extends Component {
     this.setState({message: 'valid'});
   }
 
+  onKeydown(event) {
+    console.log(event.key)
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        if (this.state.activeExpectation < this.state.expectations.size) {
+          this.setState({activeExpectation: this.state.activeExpectation + 1});
+        }
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        if (this.state.activeExpectation > 0) {
+          this.setState({activeExpectation: this.state.activeExpectation - 1});
+        }
+        break;
+      case 'Tab':
+        event.preventDefault();
+        if (this.state.expectations.size > 0) {
+          this.expectationClick([...this.state.expectations][this.state.activeExpectation].text);
+          this.setState({activeExpectation: 0});
+        }
+        break;
+    }
+  }
+
   expectationClick(text) { 
     this.setState({inputValue: this.state.inputValue + text});
     setTimeout(() => {
       this.onChange(); 
-      this.refs.input.focus();}, 
-    0);
+      this.refs.input.focus();
+    }, 0);
   }
-
-
 
   render() {
     return (
-      <div style={styles.smartInput}>
-        <div style={styles.message}>
+      <div className="smart-input">
+        <div className="message">
           {this.state.message}
         </div>
-        <input style={styles.input} type="text" onChange={this.onChange.bind(this)} value={this.state.inputValue} ref="input" />
-        <div style={styles.expectations}>
+        <input className="input" type="text" onKeyDown={this.onKeydown.bind(this)} onChange={this.onChange.bind(this)} value={this.state.inputValue} ref="input" />
+        <div className="expectations">
           {(()=>{
             var container = [];
-            this.state.expectations.forEach((expectation, i) => {
+            var i = 0;
+            this.state.expectations.forEach((expectation) => {
               if (expectation.text) {
-                container.push(<div style={styles.expectation} key={expectation.text} onClick={this.expectationClick.bind(this, expectation.text)}> {expectation.text} </div>)
+                var classes = i === this.state.activeExpectation ? 'expectation active' : 'expectation';
+                container.push(<div className={classes} key={expectation.text} onClick={this.expectationClick.bind(this, expectation.text)}> {expectation.text} </div>)
+                i++;
               }
             })
             return container;
@@ -57,25 +89,3 @@ export default class SmartInput extends Component {
     );
   }
 }
-
-const styles = {
-  smartInput: {
-    position: 'relative'
-  },
-  input: {
-    width: '100%'
-  },
-  expectations: {
-    position: 'absolute',
-    top: '100%',
-    border: '1px solid #ccc',
-    borderTop: 'none'
-  },
-  expectation: {
-    padding: '5px 10px',
-    cursor: 'pointer'
-  },
-  message: {
-    fontSize: '0.9em'
-  }
-};
