@@ -16,14 +16,13 @@ export default class SmartInput extends Component {
 
   componentDidMount () {
     window.addEventListener('mousedown', this.pageClick, false);
-    var self = this;
-    document.querySelector('#smart-input').addEventListener('keyup', function () {
-      self.setState({caret: this.selectionStart})
-      self.onChange()
+    this.input = document.querySelector('#smart-input')
+
+    document.querySelector('#smart-input').addEventListener('keyup', () => {
+      this.updateCaret()
     })
-    document.querySelector('#smart-input').addEventListener('click', function () {
-      self.setState({caret: this.selectionStart})
-      self.onChange()
+    document.querySelector('#smart-input').addEventListener('click', () => {
+      this.updateCaret()
     })
   }
 
@@ -31,6 +30,11 @@ export default class SmartInput extends Component {
     if (event.target.getAttribute('data-expectation')) {
       event.preventDefault();
     }
+  }
+
+  updateCaret () {
+    this.setState({caret: this.input.selectionStart})
+    this.onChange()
   }
 
   onChange (event) {
@@ -61,11 +65,11 @@ export default class SmartInput extends Component {
       if (!value.text) {
         expectations.delete(value);
       }
-    });
+    })
     this.setState({ expectations: expectations, inputValue: event.target.value });
     if (result.message && event.target.value.length > 0) {
       this.setState({ message: result.message });
-      return;
+      return
     }
     this.setState({ message: '' });
   }
@@ -101,10 +105,12 @@ export default class SmartInput extends Component {
       event.preventDefault();
       event.stopPropagation();
     }
-    this.setState({ inputValue: this.state.inputValue + text });
+    let inputTemp = this.state.inputValue.split('')
+    inputTemp.splice(this.state.caret, 0, text)
+    this.setState({ inputValue: inputTemp.join(''), caret: this.state.caret + text.length });
     setTimeout(() => {
-      this.onChange();
-      this.refs.input.focus();
+      this.refs.input.focus()
+      this.onChange()
     }, 0);
   }
 
