@@ -1,24 +1,53 @@
 .smart-input {
   position: relative;
+  font-family: sans-serif;
+  font-weight: 200;
 }
 .input {
   width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 16px;
+  padding: 3px;
+  outline: none;
 }
+
+.input::-webkit-input-placeholder {
+  font-weight: 100;
+}
+
 .expectations {
   position: absolute;
   top: 100%;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   border-top: none;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+  min-width: 80px;
 }
+.expectations:empty {
+  display: none;
+}
+
 .expectation {
   padding: 5px 10px;
   cursor: pointer;
 }
 
+
 .expectation:hover, .expectation.active {
-  background: #ccc;
+  background: #ddd;
 }
 
 .message {
   font-size: 0.9em;
+  color: #555;
+  position: absolute;
+  top: -16px;
+  left: 0;
+}
+
+h1 {
+  font-family: sans-serif;
+  font-weight: 100;
 }

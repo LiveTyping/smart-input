@@ -60,6 +60,5 @@
     "yargs": "^5.0.0"
   },
   "dependencies": {
-    "pegjs": "^0.10.0"
   }
 }
