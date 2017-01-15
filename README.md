@@ -1,12 +1,10 @@
-# smart-input
+# ReactSmartInput
 
-smart input
+React component – an input to 
 
 ## Installation
 
-```sh
-$ npm install smart-input
-```
+You have to download it manually or instal from GitHub. NPM release is comming soon.
 
 ## Usage
 
@@ -26,7 +24,7 @@ Run the example app at [http://localhost:8080](http://localhost:8080):
 $ npm run example
 ```
 
-Run tests in Chrome using [karma](https://github.com/karma-runner/karma):
+No tests yet, but to run tests in Chrome using [karma](https://github.com/karma-runner/karma):
 
 ```
 $ npm test

@@ -1,11 +1,11 @@
-const path = require('path');
-const webpack = require('webpack');
-const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
+const path = require('path')
+const webpack = require('webpack')
+const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin
 
-const libraryName = 'smartInput';
+const libraryName = 'smartInput'
 
 module.exports = {
-  entry: path.join(__dirname, 'src/index.jsx'),
+  entry: path.join(__dirname, 'src/index.js'),
   output: {
     path: path.join(__dirname, 'lib'),
     filename: libraryName + '.min.js',
@@ -34,4 +34,4 @@ module.exports = {
     extensions: ['.js']
   },
   plugins: [new UglifyJsPlugin({ minimize: true })]
-};
+}

@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
-import parser from './parser';
+// eslint-disable-next-line
+import React, { Component } from 'react'
+import parser from './parser'
 
 export default class SmartInput extends Component {
-  constructor() {
-    super();
+  constructor () {
+    super()
     this.state = {
       message: '',
       expectations: new Set(),
@@ -11,11 +12,11 @@ export default class SmartInput extends Component {
       caret: 0,
       activeExpectation: 0,
       focused: false
-    };
+    }
   }
 
   componentDidMount () {
-    window.addEventListener('mousedown', this.pageClick, false);
+    window.addEventListener('mousedown', this.pageClick, false)
     this.input = document.querySelector('#smart-input')
 
     document.querySelector('#smart-input').addEventListener('keyup', () => {
@@ -28,7 +29,7 @@ export default class SmartInput extends Component {
 
   pageClick (event) {
     if (event.target.getAttribute('data-expectation')) {
-      event.preventDefault();
+      event.preventDefault()
     }
   }
 
@@ -39,17 +40,17 @@ export default class SmartInput extends Component {
 
   onChange (event) {
     if (!event) {
-      event = { target: { value: this.state.inputValue } };
+      event = { target: { value: this.state.inputValue } }
     }
-    let result = null;
+    let result = null
     try {
-      result = parser.parse(event.target.value.split('').slice(0, this.state.caret).join(''));
+      result = parser.parse(event.target.value.split('').slice(0, this.state.caret).join(''))
     }
     catch (err) {
-      result = err;
+      result = err
     }
-    let expectations = new Set(result.expected);
-    let expectationsCopy = new Set(expectations);
+    let expectations = new Set(result.expected)
+    let expectationsCopy = new Set(expectations)
     expectationsCopy.forEach((value) => {
       for (let key of Object.keys(this.props.suggestions)) {
         if (key === value.description || key === value.type) {
@@ -57,21 +58,21 @@ export default class SmartInput extends Component {
             expectations.add({
               ignoreCase: false,
               text: suggestion,
-              type: key  
-            });
+              type: key
+            })
           }
         }
       }
       if (!value.text) {
-        expectations.delete(value);
+        expectations.delete(value)
       }
     })
-    this.setState({ expectations: expectations, inputValue: event.target.value });
+    this.setState({ expectations: expectations, inputValue: event.target.value })
     if (result.message && event.target.value.length > 0) {
-      this.setState({ message: result.message });
+      this.setState({ message: result.message })
       return
     }
-    this.setState({ message: '' });
+    this.setState({ message: '' })
   }
 
   onKeydown (event) {
@@ -80,49 +81,48 @@ export default class SmartInput extends Component {
     }
     switch (event.key) {
       case 'ArrowDown':
-        event.preventDefault();
+        event.preventDefault()
         if (this.state.activeExpectation < this.state.expectations.size) {
-          this.setState({ activeExpectation: this.state.activeExpectation + 1 });
+          this.setState({ activeExpectation: this.state.activeExpectation + 1 })
         }
-        break;
+        break
       case 'ArrowUp':
-        event.preventDefault();
+        event.preventDefault()
         if (this.state.activeExpectation > 0) {
-          this.setState({ activeExpectation: this.state.activeExpectation - 1 });
+          this.setState({ activeExpectation: this.state.activeExpectation - 1 })
         }
-        break;
+        break
       case this.props.applyKey:
-        event.preventDefault();
+        event.preventDefault()
         if (this.state.expectations.size > 0) {
-          this.expectationClick(null, [...this.state.expectations][this.state.activeExpectation].text);
-          this.setState({ activeExpectation: 0 });
+          this.expectationClick(null, [...this.state.expectations][this.state.activeExpectation].text)
+          this.setState({ activeExpectation: 0 })
         }
-        break;
+        break
     }
   }
   expectationClick (event, text) {
     if (event) {
-      event.preventDefault();
-      event.stopPropagation();
+      event.preventDefault()
+      event.stopPropagation()
     }
     let inputTemp = this.state.inputValue.split('')
     inputTemp.splice(this.state.caret, 0, text)
-    this.setState({ inputValue: inputTemp.join(''), caret: this.state.caret + text.length });
+    this.setState({ inputValue: inputTemp.join(''), caret: this.state.caret + text.length })
     setTimeout(() => {
       this.refs.input.focus()
       this.onChange()
-    }, 0);
+    }, 0)
   }
 
   handleBlur (event) {
-    this.setState({focused: false});
+    this.setState({focused: false})
   }
   handleFocus (event) {
-    this.setState({focused: true});
+    this.setState({focused: true})
   }
 
-
-  render() {
+  render () {
     return (
       <div className="smart-input">
         {this.props.errors &&
@@ -134,20 +134,20 @@ export default class SmartInput extends Component {
         {this.state.focused &&
           <div className="expectations">
             {(() => {
-              let container = [];
-              let i = 0;
+              let container = []
+              let i = 0
               this.state.expectations.forEach((expectation) => {
                 if (expectation.text) {
-                  let classes = i === this.state.activeExpectation ? 'expectation active' : 'expectation';
+                  let classes = i === this.state.activeExpectation ? 'expectation active' : 'expectation'
                   container.push(<div data-expectation="true" className={classes} key={expectation.text} onClick={this.expectationClick.bind(this, event, expectation.text)}> {expectation.text} </div>)
-                  i++;
+                  i++
                 }
-              });
-              return container;
+              })
+              return container
             })()}
           </div>
         }
       </div>
-    );
+    )
   }
 }
