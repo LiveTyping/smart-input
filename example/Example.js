@@ -7,8 +7,8 @@ export default class Example extends Component {
   render () {
     return (
       <div>
-        <h1>SmartInput</h1>
-        <SmartInput applyKey="Tab" suggestions={{ identifier: ['id', 'name', 'age'] }} placeholder="SQL-like query" errors={true}/>
+        <h1>ReactSmartInput</h1>
+        <SmartInput applyKey="Tab" suggestions={{ identifier: ['start_date', 'end_date', 'created', 'timestamp'] }} placeholder="SQL-like query" errors={true} />
       </div>
     )
   }
