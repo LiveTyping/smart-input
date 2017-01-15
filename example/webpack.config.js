@@ -1,6 +1,6 @@
-const path = require('path');
-const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   entry: [
@@ -18,7 +18,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'index.html'),
       filename: 'index.html'
-    }),
+    })
   ],
   module: {
     loaders: [
@@ -37,10 +37,11 @@ module.exports = {
           'style-loader?sourceMap',
           'css-loader?sourceMap&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]'
         ]
-      },
+      }
     ]
   },
   resolve: {
     extensions: ['.js']
   }
-};
+}
+
