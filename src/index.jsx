@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import parser from './parser';
-import getCaretCoordinates from 'textarea-caret';
-import caret from './caret.js';
 
 export default class SmartInput extends Component {
   constructor() {
