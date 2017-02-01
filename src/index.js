@@ -19,8 +19,8 @@ export default class SmartInput extends Component {
     window.addEventListener('mousedown', this.pageClick, false)
     this.input = document.querySelector('#smart-input')
 
-    document.querySelector('#smart-input').addEventListener('keyup', () => {
-      this.updateCaret()
+    document.querySelector('#smart-input').addEventListener('keyup', (e) => {
+      this.updateCaret(e)
     })
     document.querySelector('#smart-input').addEventListener('click', () => {
       this.updateCaret()
@@ -33,48 +33,48 @@ export default class SmartInput extends Component {
     }
   }
 
-  updateCaret () {
-    this.setState({caret: this.input.selectionStart})
-    this.onChange()
+  updateCaret (event) {
+    if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') {
+      this.setState({caret: this.input.selectionStart})
+      this.onChange()
+    }
   }
 
   onChange (event) {
+    if (!event) {
+      event = { target: { value: this.state.inputValue } }
+    }
     let result = null
-    if (event) {
-      if (event === true) {
-        event = { target: { value: this.state.inputValue } }
-      }
-      try {
-        result = parser.parse(event.target.value.split('').slice(0, this.state.caret).join(''))
-      }
-      catch (err) {
-        result = err
-      }
-      let expectations = new Set(result.expected)
-      let expectationsCopy = new Set(expectations)
-      expectationsCopy.forEach((value) => {
-        for (let key of Object.keys(this.props.suggestions)) {
-          if (key === value.description || key === value.type) {
-            for (let suggestion of this.props.suggestions[key]) {
-              expectations.add({
-                ignoreCase: false,
-                text: suggestion,
-                type: key
-              })
-            }
+    try {
+      result = parser.parse(event.target.value.split('').slice(0, this.state.caret).join(''))
+    }
+    catch (err) {
+      result = err
+    }
+    let expectations = new Set(result.expected)
+    let expectationsCopy = new Set(expectations)
+    expectationsCopy.forEach((value) => {
+      for (let key of Object.keys(this.props.suggestions)) {
+        if (key === value.description || key === value.type) {
+          for (let suggestion of this.props.suggestions[key]) {
+            expectations.add({
+              ignoreCase: false,
+              text: suggestion,
+              type: key
+            })
           }
         }
-        if (!value.text) {
-          expectations.delete(value)
-        }
-      })
-      this.setState({ expectations: expectations, inputValue: event.target.value })
-      if (result.message && event.target.value.length > 0) {
-        this.setState({ message: result.message })
-        return
       }
-      this.setState({ message: '' })
+      if (!value.text) {
+        expectations.delete(value)
+      }
+    })
+    this.setState({ expectations: expectations, inputValue: event.target.value })
+    if (result.message && event.target.value.length > 0) {
+      this.setState({ message: result.message })
+      return
     }
+    this.setState({ message: '' })
   }
 
   onKeydown (event) {
@@ -115,7 +115,7 @@ export default class SmartInput extends Component {
     setTimeout(() => {
       this.refs.input.focus()
       this.refs.input.selectionStart = this.refs.input.selectionEnd = newCaretPosition
-      this.onChange(true)
+      this.onChange()
     }, 0)
   }
 
