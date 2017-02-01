@@ -107,12 +107,10 @@ export default class SmartInput extends Component {
       event.stopPropagation()
     }
     let inputTemp = this.state.inputValue.split('')
-    let newCaretPosition = this.state.caret + text.length
     inputTemp.splice(this.state.caret, 0, text)
     this.setState({ inputValue: inputTemp.join(''), caret: this.state.caret + text.length })
     setTimeout(() => {
       this.refs.input.focus()
-      this.refs.input.selectionStart = this.refs.input.selectionEnd = newCaretPosition
       this.onChange()
     }, 0)
   }
