@@ -2,7 +2,7 @@
 
 React component – an input with dropdown suggestion to build SQL-like queries. Uses PEG.js to parse and get expectations and errors. You can fork and import your own grammar. This is an initial version more flexibility and features are comming.
 
-![](http://git.ltst.su/d.skripkin/smart-input/raw/master/example.gif)
+![](https://raw.githubusercontent.com/LiveTyping/smart-input/master/example.gif)
 
 ## Installation
 
